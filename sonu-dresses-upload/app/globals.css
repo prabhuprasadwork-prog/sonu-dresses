@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html { scroll-behavior: smooth; }
+body { @apply bg-cotton text-charcoal font-sans antialiased; }
+
+/* A woven selvedge stripe, used as the brand's one decorative device */
+.selvedge {
+  background-image: repeating-linear-gradient(
+    90deg,
+    #B3303A 0 14px,
+    #E9A21A 14px 20px,
+    #1F2A5C 20px 34px,
+    #FAF9F6 34px 38px
+  );
+  background-size: 38px 100%;
+}
+
+/* The stripe slowly drifts, like cloth moving through a loom */
+.selvedge-animated {
+  animation: selvedge-drift 2.4s linear infinite;
+}
+@keyframes selvedge-drift {
+  from { background-position: 0 0; }
+  to   { background-position: 38px 0; }
+}
+
+/* Soft pulsing glow, like the lit shop sign */
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 18px rgba(233, 162, 26, 0.35); }
+  50%      { box-shadow: 0 0 38px rgba(233, 162, 26, 0.75); }
+}
+
+/* In the components layer so Tailwind utilities (e.g. `absolute`) can override them */
+@layer components {
+/* Underline that grows from the left on hover */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  height: 2px;
+  width: 100%;
+  background: #B3303A;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.link-underline:hover::after,
+.link-underline:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Expanding ring behind the floating WhatsApp button */
+.pulse-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: #25D366;
+  z-index: -1;
+  animation: pulse-ring 2.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+@keyframes pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.55; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+
+/* Light sweep across primary buttons on hover */
+.shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.28) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.shine:hover::after {
+  transform: translateX(120%);
+}
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
